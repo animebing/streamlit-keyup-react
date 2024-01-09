@@ -3,6 +3,7 @@ import {
   withStreamlitConnection,
 } from 'streamlit-component-lib'
 import React, { useEffect, useState } from 'react'
+import { useDebouncedCallback } from 'use-debounce';
 import './KeyUpComponent.css'
 
 const KeyUpComponent = (props) => {
@@ -12,23 +13,21 @@ const KeyUpComponent = (props) => {
   const changeHandler = (event) => {
     setText(event.target.value)
   };
+
   const keyUpHandler = (event) => {
     Streamlit.setComponentValue(event.target.value);
   }
-  const debounce = (callback, wait) => {
-    let timeoutId;
-    return (...args) => {
-      clearTimeout(timeoutId);
-      timeoutId = setTimeout(() => {
-        callback.apply(null, args);
-      }, wait);
-    };
-  };
+  const debounced = useDebouncedCallback(
+    (event) => {
+      Streamlit.setComponentValue(event.target.value);
+    },
+    props.args.debounce,
+  );
 
   const {
     label,
-    debounce: debounce_time,
     max_chars,
+    debounce,
     type,
     placeholder,
     disabled,
@@ -53,8 +52,6 @@ const KeyUpComponent = (props) => {
     Streamlit.setFrameHeight(45);
   }
   outerClassName = outerClassName.trim();
-
-  const usedOnKeyUp = debounce_time > 0 ? debounce(keyUpHandler, debounce_time) : keyUpHandler
   return (
     <div className={outerClassName}>
       <label>{label}</label>
@@ -66,7 +63,7 @@ const KeyUpComponent = (props) => {
           placeholder={placeholder}
           value={text}
           onChange={changeHandler}
-          // onKeyUp={usedOnKeyUp}
+          onKeyUp={debounce > 0 ? (event) => debounced(event) : keyUpHandler}
         />
       </div>
     </div>
