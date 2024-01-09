@@ -2,9 +2,20 @@ import {
   Streamlit,
   withStreamlitConnection,
 } from 'streamlit-component-lib'
-import React, { useEffect, useState } from 'react'
-import { useDebouncedCallback } from 'use-debounce';
+import React, { useCallback, useEffect, useState } from 'react'
 import './KeyUpComponent.css'
+
+
+const debounce = (callback, wait) => {
+  let timeoutId;
+  return (...args) => {
+    window.clearTimeout(timeoutId);
+    timeoutId = window.setTimeout(() => {
+      callback.apply(null, args);
+    }, wait);
+  };
+}
+
 
 const KeyUpComponent = (props) => {
   const [text, setText] = useState(props.args.value);
@@ -17,17 +28,18 @@ const KeyUpComponent = (props) => {
   const keyUpHandler = (event) => {
     Streamlit.setComponentValue(event.target.value);
   }
-  const debounced = useDebouncedCallback(
-    (event) => {
-      Streamlit.setComponentValue(event.target.value);
-    },
-    props.args.debounce,
+
+  const debounce_time = props.args.debounce
+  // if i do not use useCallback here, the debounce will not work, i do not know the reason now
+  // eslint-disable-next-line
+  const debouncedKeyUpHandler = useCallback(
+    debounce(keyUpHandler, debounce_time),
+    [debounce_time],
   );
 
   const {
     label,
     max_chars,
-    debounce,
     type,
     placeholder,
     disabled,
@@ -63,7 +75,7 @@ const KeyUpComponent = (props) => {
           placeholder={placeholder}
           value={text}
           onChange={changeHandler}
-          onKeyUp={debounce > 0 ? (event) => debounced(event) : keyUpHandler}
+          onKeyUp={debounce_time > 0 ? debouncedKeyUpHandler : keyUpHandler}
         />
       </div>
     </div>
