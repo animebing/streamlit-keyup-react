@@ -2,7 +2,7 @@ import {
   Streamlit,
   withStreamlitConnection,
 } from 'streamlit-component-lib'
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import './KeyUpComponent.css'
 
 
@@ -19,7 +19,6 @@ const debounce = (callback, wait) => {
 
 const KeyUpComponent = (props) => {
   const [text, setText] = useState(props.args.value);
-  useEffect(() => Streamlit.setFrameHeight(73), [])
   
   const changeHandler = (event) => {
     setText(event.target.value)
@@ -52,6 +51,7 @@ const KeyUpComponent = (props) => {
     inputType = 'password';
   }
 
+  Streamlit.setFrameHeight(73);
   let outerClassName = ''
   if (disabled) {
     outerClassName += 'disabled';
@@ -61,13 +61,14 @@ const KeyUpComponent = (props) => {
   }
   else if (label_visibility === "collapsed") {
     outerClassName += ' label-collapsed';
-    Streamlit.setFrameHeight(45);
+    Streamlit.setFrameHeight(40);
   }
   outerClassName = outerClassName.trim();
+
   return (
     <div className={outerClassName}>
       <label>{label}</label>
-      <div className="input">
+      <div className='input'>
         <input
           disabled={disabled}
           maxLength={maxLength}
