@@ -1,21 +1,18 @@
 # streamlit-keyup-react
 
-Streamlit text input that returns value on keyup
+React reimplementation of [st_keyup](https://github.com/blackary/streamlit-keyup), the code is modified from [component-template](https://github.com/streamlit/component-template/tree/master/template)
 
-## Installation instructions
 
-```sh
-pip install streamlit-keyup-react
-```
+## Installation
 
-## Usage instructions
+`pip install streamlit-keyup-react`
+
+## Usage
 
 ```python
 import streamlit as st
-
 from st_keyup_react import st_keyup_react
 
-value = st_keyup_react()
-
+value = st_keyup_react('input', debounce=300)
 st.write(value)
 ```

@@ -8,9 +8,9 @@ long_description = (this_directory / "README.md").read_text()
 setuptools.setup(
     name="streamlit-keyup-react",
     version="0.0.1",
-    author="animebing",
+    author="Yanbing Dong",
     author_email="yanbing_dong@hotmail.com",
-    description="Streamlit text input that returns value on keyup",
+    description="Text input that renders on keyup",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="",
@@ -18,20 +18,5 @@ setuptools.setup(
     include_package_data=True,
     classifiers=[],
     python_requires=">=3.7",
-    install_requires=[
-        # By definition, a Custom Component depends on Streamlit.
-        # If your component has other Python dependencies, list
-        # them here.
-        "streamlit >= 0.63",
-    ],
-    extras_require={
-        "devel": [
-            "wheel",
-            "pytest==7.4.0",
-            "playwright==1.39.0",
-            "requests==2.31.0",
-            "pytest-playwright-snapshot==1.0",
-            "pytest-rerunfailures==12.0",
-        ]
-    }
+    install_requires=["streamlit >= 1.2"],
 )
